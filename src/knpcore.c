@@ -203,22 +203,15 @@ KNP_RESULT knpi_jn(KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3)
 
 KNP_RESULT knpi_out(KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3)
 {
-	if (op2.ty != NUL || op3.ty != NUL)
+	if (op1.ty != REG || op2.ty != NUL || op3.ty != NUL)
 		return 1;
-
-	if (op1.ty == IMM)
-		printf("IMM : %5d\n", op1.val);
-	else if (op1.ty == REG)
-	{
-		KNP_RESULT kr = 0;
-		int16_t val;
-		kr = getreg(op1.val, &val);
-		if (kr)
-			return kr;
-		printf("REG%d: %5d\n", op1.val, val);
-	}
-	else
-		return 1;
+	
+	KNP_RESULT kr = 0;
+	int16_t val;
+	kr = getreg(op1.val, &val);
+	if (kr)
+		return kr;
+	printf("REG%d: %5d\n", op1.val, val);
 
 	return 0;
 }

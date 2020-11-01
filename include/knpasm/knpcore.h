@@ -7,8 +7,6 @@
 
 typedef uint64_t KNP_RESULT;
 
-
-
 // Instruction set
 
 #define MAX_ADDR 0xFFFF
