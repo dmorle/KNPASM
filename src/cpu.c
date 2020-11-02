@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include <knpasm/knpcore.h>
 
 static int16_t r0;
@@ -13,7 +11,7 @@ static int16_t r7;
 
 static int16_t ram[MAX_ADDR + 1];
 
-static KNP_INSTRUCTION knpi_mem[MAX_ADDR + 1];
+static KNP_INSTRUCTION knpi_mem[MAX_KNPI + 1];
 static uint16_t pc;
 static uint16_t po;
 
@@ -264,7 +262,7 @@ KNP_RESULT step()
 		return knpi_jmp (knpi.opr1, knpi.opr2, knpi.opr3);
 	case JZ:
 		return knpi_jz  (knpi.opr1, knpi.opr2, knpi.opr3);
-	case NZ:
+	case JN:
 		return knpi_jn  (knpi.opr1, knpi.opr2, knpi.opr3);
 	case OUT:
 		return knpi_out (knpi.opr1, knpi.opr2, knpi.opr3);
