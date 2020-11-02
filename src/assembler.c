@@ -475,7 +475,5 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 			pprog->pknpi[i].opr2.val = labelval[pprog->pknpi[i].opr2.val];
 	}
 
-	exit(0);
-
 	return 0;
 }

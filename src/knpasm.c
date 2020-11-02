@@ -91,8 +91,8 @@ int main(int argc, char *argv[])
 			exit(1);
 		}
 
-		for (char* c = argv[2]; c; c++)
-			if (c < 0x30 || c > 0x39)
+		for (char* pC = argv[3]; *pC; pC++)
+			if (*pC < '0' || '9' < *pC)
 			{
 				printf("Invalid argument: %s\n", argv[3]);
 				exit(1);

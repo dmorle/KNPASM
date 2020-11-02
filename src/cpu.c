@@ -57,7 +57,7 @@ KNP_RESULT knpi_strm(KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3)
 	int16_t val1, val2;
 	getreg(op1.val, &val1);
 	getreg(op2.val, &val2);
-	ram[val1] = val2;
+	ram[val2] = val1;
 
 	return 0;
 }

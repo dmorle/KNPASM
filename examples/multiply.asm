@@ -1,7 +1,8 @@
+// step for 35 clock cycles
 	mvi  r0, #5
 	mvi  r1, #6
-	mvi  r6, #FFFF
-	mvi  r7, #FFFE
+	mvi  r6, #7FFF
+	mvi  r7, #7FFE
 	strm r0, r6
 	strm r1, r7
 	mvi  r2, #0
