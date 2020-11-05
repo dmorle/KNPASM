@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include <knpasm/knpcore.h>
+#include <knpasm/knputil.h>
 
 #define MAX_LABELS 256
 #define MAX_LABEL_SIZE 64
@@ -9,38 +10,12 @@
 char    labelstr[MAX_LABELS][MAX_LABEL_SIZE];
 int16_t labelval[MAX_LABELS];
 
-static inline bool iswhitespace(char c)
-{
-	return c == ' ' || c == '\t';
-}
-
-static inline bool iscomment(const char* pC)
+inline bool iscomment(const char* pC)
 {
 	return *pC == '/' && pC[1] == '/';
 }
 
-static inline bool isalphanumeric(char c)
-{
-	return
-		('0' <= c && c <= '9') ||
-		('A' <= c && c <= 'Z') ||
-		('a' <= c && c <= 'z') || c == '_';
-}
-
-static inline bool ishex(char c)
-{
-	return
-		('0' <= c && c <= '9') ||
-		('A' <= c && c <= 'F');
-}
-
-static inline uint8_t hctoi(char c)
-{
-	int cond = ('0' <= c && c <= '9');
-	return (c - '0') * cond + (c + 0x0A - 'A') * (1 - cond);
-}
-
-static void cleanline(char* dst, const char* src)
+void cleanline(char* dst, const char* src)
 {
 	int i = 0;
 	bool prefix = true;
@@ -63,13 +38,7 @@ static void cleanline(char* dst, const char* src)
 	return 0;
 }
 
-static void touppercase(char* str)
-{
-	for (char* pC = str; *pC; pC++)
-		*pC -= 0x20 * ('a' <= *pC && *pC <= 'z');
-}
-
-static KNP_OPCODE knpiopcode(char* strknpi)
+KNP_OPCODE knpiopcode(char* strknpi)
 {
 	if (!strncmp(strknpi, "MRR ", 4))
 		return MRR;
@@ -107,7 +76,7 @@ static KNP_OPCODE knpiopcode(char* strknpi)
 	return NOOP;
 }
 
-static KNP_RESULT stoknpi(KNP_INSTRUCTION* pknpi, char* strknpi)
+KNP_RESULT stoknpi(KNP_INSTRUCTION* pknpi, char* strknpi)
 {
 
 	return 0;

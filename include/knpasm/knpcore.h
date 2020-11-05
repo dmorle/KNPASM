@@ -113,7 +113,10 @@ KNP_RESULT loadprogram(KNP_PROGRAM* pknpp, uint16_t offset);
 
 KNP_RESULT step();
 
+int16_t    getmem(uint16_t addr);
 KNP_RESULT getreg(KNP_OPRAND_VAL reg, int16_t* pval);
 KNP_RESULT setreg(KNP_OPRAND_VAL reg, int16_t  nval);
+
+KNP_INSTRUCTION getins();
 
 #endif

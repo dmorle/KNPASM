@@ -209,7 +209,7 @@ KNP_RESULT knpi_out(KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3)
 	kr = getreg(op1.val, &val);
 	if (kr)
 		return kr;
-	printf("REG%d: %5d\n", op1.val, val);
+	printf("Register %d: %5d\n", op1.val, val);
 
 	return 0;
 }
@@ -333,4 +333,14 @@ KNP_RESULT setreg(KNP_OPRAND_VAL reg, int16_t nval)
 	default:
 		return 1;
 	}
+}
+
+int16_t getmem(uint16_t addr)
+{
+	return ram[addr];
+}
+
+KNP_INSTRUCTION getins()
+{
+	return knpi_mem[pc];
 }

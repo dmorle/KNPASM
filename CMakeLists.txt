@@ -9,9 +9,10 @@ include_directories ("include")
 add_executable(
 	knpasm
 	"src/knpasm.c"
+	"src/knputil.c"
 	"src/assembler.c"
 	"src/cpu.c"
 	
 	"include/knpasm/knpcore.h"
-	
- )
+	"include/knpasm/knputil.h"
+)
