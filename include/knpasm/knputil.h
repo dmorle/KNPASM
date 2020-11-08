@@ -14,5 +14,6 @@ void touppercase(char* str);
 size_t readline(char** pbuf, size_t n);
 
 void printknpi(KNP_INSTRUCTION knpi);
+void opctoa(KNP_OPCODE opc, char* buf);
 
 #endif

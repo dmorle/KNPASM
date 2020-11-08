@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include <knpasm/knputil.h>
 
@@ -73,7 +75,7 @@ void printknpi(KNP_INSTRUCTION knpi)
 {
 	switch (knpi.opc)
 	{
-	case NUL:
+	case NOOP:
 		printf("No instruction\n");
 		break;
 	case MRR:
@@ -123,6 +125,64 @@ void printknpi(KNP_INSTRUCTION knpi)
 		break;
 	case OUT:
 		printf("OUT   R%d\n", knpi.opr1.val);
+		break;
+	}
+}
+
+void opctoa(KNP_OPCODE opc, char* buf)
+{
+	switch (opc)
+	{
+	case NOOP:
+		strcpy(buf, "NOOP");
+		break;
+	case MRR:
+		strcpy(buf, "MRR");
+		break;
+	case MVI:
+		strcpy(buf, "MVI");
+		break;
+	case LDMR:
+		strcpy(buf, "LDMR");
+		break;
+	case STRM:
+		strcpy(buf, "LDMR");
+		break;
+	case ADD:
+		strcpy(buf, "ADD");
+		break;
+	case SUB:
+		strcpy(buf, "SUB");
+		break;
+	case INC:
+		strcpy(buf, "INC");
+		break;
+	case DEC:
+		strcpy(buf, "DEC");
+		break;
+	case AND:
+		strcpy(buf, "AND");
+		break;
+	case OR:
+		strcpy(buf, "OR");
+		break;
+	case XOR:
+		strcpy(buf, "XOR");
+		break;
+	case NOT:
+		strcpy(buf, "NOT");
+		break;
+	case JMP:
+		strcpy(buf, "JMP");
+		break;
+	case JZ:
+		strcpy(buf, "JZ");
+		break;
+	case JN:
+		strcpy(buf, "JN");
+		break;
+	case OUT:
+		strcpy(buf, "OUT");
 		break;
 	}
 }

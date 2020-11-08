@@ -35,7 +35,6 @@ void cleanline(char* dst, const char* src)
 	for (; iswhitespace(dst[i]); i--);
 	
 	dst[i + 1] = '\0';
-	return 0;
 }
 
 KNP_OPCODE knpiopcode(char* strknpi)
@@ -76,13 +75,7 @@ KNP_OPCODE knpiopcode(char* strknpi)
 	return NOOP;
 }
 
-KNP_RESULT stoknpi(KNP_INSTRUCTION* pknpi, char* strknpi)
-{
-
-	return 0;
-}
-
-KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
+void readprogram(KNP_PROGRAM* pprog, FILE* pf)
 {
 #define LINESIZE 128
 
@@ -108,12 +101,14 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 		{
 			// must be a label
 			char* lbl_offset = labelstr[label_idx];
+			bool valid_lbl = false;
 			for (char* pC = linebuf; *pC; pC++)
 			{
 				if (!isalphanumeric(*pC))
 				{
 					if (*pC != ':' || pC[1] != '\0')
-						exit(1);
+						goto SYNTAX_ERROR;
+					valid_lbl = true;
 					break;
 				}
 				else
@@ -123,15 +118,22 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 					labelval[label_idx] = knpi_idx;
 				}
 			}
+			*lbl_offset = 0;
+			if (!valid_lbl)
+				goto SYNTAX_ERROR;
 			for (int i = 0; i < label_idx; i++)
 				if (!strcmp(labelstr[i], labelstr[label_idx]))
 				{
 					// either the label is defined twice,
 					// or it was already encountered in a j* knpi
 					if (labelval[i] != -1)
-						exit(1); // label was defined twice
+					{
+						// label was defined twice
+						printf("Multiple definitions of label %s found\n", labelstr[i]);
+						exit(1);
+					}
 
-					// already encountered in a j* knpi
+					// already encountered in a j* knpi using the label
 					labelval[i] = knpi_idx;
 					label_idx--;
 					break;
@@ -152,23 +154,23 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val1 = (uint64_t)linebuf[++knpi_offset] - '0';
 			if (val1 < 0 || val1 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != ',')
-				exit(1);
+				goto SYNTAX_ERROR;
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val2 = (uint64_t)linebuf[++knpi_offset] - '0';
 			if (val2 < 0 || val2 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 
 			if (linebuf[++knpi_offset])
-				exit(1);
+				goto SYNTAX_ERROR;
 			pprog->pknpi[knpi_idx++] = (KNP_INSTRUCTION)
 			{
 				opc,
@@ -183,23 +185,23 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val1 = (uint64_t)linebuf[++knpi_offset] - '0';
 			if (val1 < 0 || val1 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != ',')
-				exit(1);
+				goto SYNTAX_ERROR;
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val2 = (uint64_t)linebuf[++knpi_offset] - '0';
 			if (val2 < 0 || val2 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 
 			if (linebuf[++knpi_offset])
-				exit(1);
+				goto SYNTAX_ERROR;
 			pprog->pknpi[knpi_idx++] = (KNP_INSTRUCTION)
 			{
 				opc,
@@ -216,33 +218,33 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val1 = (uint64_t)linebuf[++knpi_offset] - '0';
 			if (val1 < 0 || val1 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != ',')
-				exit(1);
+				goto SYNTAX_ERROR;
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val2 = (uint64_t)linebuf[++knpi_offset] - '0';
 			if (val2 < 0 || val2 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != ',')
-				exit(1);
+				goto SYNTAX_ERROR;
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val3 = (uint64_t)linebuf[++knpi_offset] - '0';
 			if (val3 < 0 || val3 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 			
 			if (linebuf[++knpi_offset])
-				exit(1);
+				goto SYNTAX_ERROR;
 			pprog->pknpi[knpi_idx++] = (KNP_INSTRUCTION)
 			{
 				opc,
@@ -257,33 +259,33 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val1 = (uint64_t)linebuf[++knpi_offset] - '0';
 			if (val1 < 0 || val1 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != ',')
-				exit(1);
+				goto SYNTAX_ERROR;
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val2 = (uint64_t)linebuf[++knpi_offset] - '0';
 			if (val2 < 0 || val2 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != ',')
-				exit(1);
+				goto SYNTAX_ERROR;
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val3 = (uint64_t)linebuf[++knpi_offset] - '0';
 			if (val3 < 0 || val3 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 
 			if (linebuf[++knpi_offset])
-				exit(1);
+				goto SYNTAX_ERROR;
 			pprog->pknpi[knpi_idx++] = (KNP_INSTRUCTION)
 			{
 				opc,
@@ -298,19 +300,19 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset++] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val1 = (uint64_t)linebuf[knpi_offset] - '0';
 			if (val1 < 0 || val1 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset] != ',')
-				exit(1);
+				goto SYNTAX_ERROR;
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset++] != '#')
-				exit(1);
+				goto SYNTAX_ERROR;
 			if (!ishex(linebuf[knpi_offset]))
-				exit(1);
+				goto SYNTAX_ERROR;
 			val2 = hctoi(linebuf[knpi_offset++]);
 			while (ishex(linebuf[knpi_offset]))
 			{
@@ -318,10 +320,13 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 				val2 += hctoi(linebuf[knpi_offset++]);
 			}
 			if (val2 > 0xFFFF)
+			{
+				printf("Immediate value overflow on line %zu\n", line_num);
 				exit(1);
+			}
 
 			if (linebuf[knpi_offset])
-				exit(1);
+				goto SYNTAX_ERROR;
 			pprog->pknpi[knpi_idx++] = (KNP_INSTRUCTION)
 			{
 				opc,
@@ -348,7 +353,7 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 					// ensuring the jmp knpi was valid
 					for (char* pC = linebuf + knpi_offset; *pC; pC++)
 						if (!isalphanumeric(*pC))
-							exit(1); // invalid oprand for jmp
+							goto SYNTAX_ERROR; // invalid oprand for jmp
 
 					// label definition was not found, creating an empty one
 					strcpy(labelstr[label_idx], linebuf + knpi_offset);
@@ -370,13 +375,13 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset++] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val1 = (uint64_t)linebuf[knpi_offset] - '0';
 			if (val1 < 0 || val1 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset++] != ',')
-				exit(1);
+				goto SYNTAX_ERROR;
 			while (iswhitespace(linebuf[++knpi_offset]));
 
 			{
@@ -393,7 +398,7 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 					// ensuring the jmp knpi was valid
 					for (char* pC = linebuf + knpi_offset; *pC; pC++)
 						if (!isalphanumeric(*pC))
-							exit(1); // invalid oprand for jmp
+							goto SYNTAX_ERROR; // invalid oprand for jmp
 
 					// label definition was not found, creating an empty one
 					strcpy(labelstr[label_idx], linebuf + knpi_offset);
@@ -415,13 +420,13 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 
 			while (iswhitespace(linebuf[++knpi_offset]));
 			if (linebuf[knpi_offset++] != 'R')
-				exit(1);
+				goto SYNTAX_ERROR;
 			val1 = (uint64_t)linebuf[knpi_offset++] - '0';
 			if (val1 < 0 || val1 > 7)
-				exit(1);
+				goto REGNUM_ERROR;
 
 			if (linebuf[knpi_offset])
-				exit(1);
+				goto SYNTAX_ERROR;
 			pprog->pknpi[knpi_idx++] = (KNP_INSTRUCTION)
 			{
 				opc,
@@ -431,6 +436,22 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 		}
 
 		linebuf = buf;
+		continue;
+
+	SYNTAX_ERROR:
+		if (opc != NOOP)
+		{
+			char buf[5] = "";
+			opctoa(opc, buf);
+			printf("Syntax error reading %s instruction on line %zu\n", buf, line_num);
+		}
+		else
+			printf("Syntax error on line: %zu\n", line_num);
+		exit(1);
+
+	REGNUM_ERROR:
+		printf("Encountered invalid register on line %zu\n", line_num);
+		exit(1);
 	}
 	pprog->knpi_size = knpi_idx;
 
@@ -443,6 +464,4 @@ KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf)
 		else if (opc == JZ || opc == JN)
 			pprog->pknpi[i].opr2.val = labelval[pprog->pknpi[i].opr2.val];
 	}
-
-	return 0;
 }

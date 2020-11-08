@@ -4,10 +4,6 @@
 #include <stdio.h>
 #include <stdint.h>
 
-// Error identification and handling
-
-typedef uint64_t KNP_RESULT;
-
 // Instruction set
 
 #define MAX_ADDR 0xFFFF
@@ -82,22 +78,22 @@ typedef struct
 }
 KNP_INSTRUCTION;
 
-inline KNP_RESULT knpi_mrr  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_mvi  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_ldmr ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_strm ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_add  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_sub  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_inc  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_dec  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_and  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_or   ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_xor  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_not  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_jmp  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_jz   ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_jn   ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
-inline KNP_RESULT knpi_out  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_mrr  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_mvi  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_ldmr ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_strm ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_add  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_sub  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_inc  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_dec  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_and  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_or   ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_xor  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_not  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_jmp  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_jz   ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_jn   ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
+inline void knpi_out  ( KNP_OPRAND op1, KNP_OPRAND op2, KNP_OPRAND op3 );
 
 // KNP programs
 
@@ -108,14 +104,14 @@ typedef struct
 }
 KNP_PROGRAM;
 
-KNP_RESULT readprogram(KNP_PROGRAM* pprog, FILE* pf);
-KNP_RESULT loadprogram(KNP_PROGRAM* pknpp, uint16_t offset);
+void    readprogram(KNP_PROGRAM* pprog, FILE* pf);
+void    loadprogram(KNP_PROGRAM* pknpp, uint16_t offset);
 
-KNP_RESULT step();
+void    step();
 
-int16_t    getmem(uint16_t addr);
-KNP_RESULT getreg(KNP_OPRAND_VAL reg, int16_t* pval);
-KNP_RESULT setreg(KNP_OPRAND_VAL reg, int16_t  nval);
+int16_t getmem(uint16_t addr);
+void    getreg(KNP_OPRAND_VAL reg, int16_t* pval);
+void    setreg(KNP_OPRAND_VAL reg, int16_t  nval);
 
 KNP_INSTRUCTION getins();
 

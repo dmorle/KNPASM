@@ -101,7 +101,7 @@ static inline void memcommand(char* linebuf)
 		addr += hctoi(linebuf[offset]);
 	}
 
-	printf("Memory Address 0x%x: %5d\n", addr, getmem(addr));
+	printf("Memory Address 0x%04x: %5d\n", addr, getmem(addr));
 }
 
 static void runtest()
