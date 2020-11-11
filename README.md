@@ -42,8 +42,8 @@ Once interactive mode has been started, you can use any of the commands shown in
 | Command Description            | Command 
 |--------------------------------|---------
 | stops program execution		 | `break`
-| steps through instructions	 | `step [{ \<num-of-steps\> \| \<conditional-expression\> }]`
-| retrieves register value(s)	 | `reg [\<register\>]`
+| steps through instructions	 | `step [{ <num-of-steps> \| <conditional-expression> }]`
+| retrieves register value(s)	 | `reg [<register>]`
 | retrieves a value from memory	 | `mem #CV`
 | prints the current instruction | `ins`
 | sets an internal cpu value     | `set { mem #CV #CV \| Rd #CV }`
