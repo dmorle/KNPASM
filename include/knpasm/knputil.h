@@ -16,4 +16,6 @@ size_t readline(char** pbuf, size_t n);
 void printknpi(KNP_INSTRUCTION knpi);
 void opctoa(KNP_OPCODE opc, char* buf);
 
+#include <knpasm/knpexpr.h>
+
 #endif

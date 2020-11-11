@@ -8,6 +8,16 @@
 
 static KNP_PROGRAM prog;
 
+static char  _r0str[] = "R0";
+static char  _r1str[] = "R1";
+static char  _r2str[] = "R2";
+static char  _r3str[] = "R3";
+static char  _r4str[] = "R4";
+static char  _r5str[] = "R5";
+static char  _r6str[] = "R6";
+static char  _r7str[] = "R7";
+static char* valid_idn[] = { _r0str, _r1str, _r2str, _r3str, _r4str, _r5str, _r6str, _r7str };
+
 static inline void stepcommand(char* linebuf)
 {
 	if (!linebuf[4])
@@ -52,13 +62,13 @@ static inline void regcommand(char* linebuf)
 	size_t offset = 3;
 	if (!iswhitespace(linebuf[3]))
 	{
-		printf("Invalid mem command: %s\n", linebuf);
+		printf("Invalid reg command: %s\n", linebuf);
 		return;
 	}
 	while (iswhitespace(linebuf[++offset]));
 	if (linebuf[offset] < '0' || '7' < linebuf[offset] || linebuf[offset + 1])
 	{
-		printf("Invalid mem command: %s\n", linebuf);
+		printf("Invalid reg command: %s\n", linebuf);
 		return;
 	}
 	uint8_t val = linebuf[offset] - '0';
