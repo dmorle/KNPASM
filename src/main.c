@@ -33,17 +33,48 @@ static inline void stepcommand(char* linebuf)
 		return;
 	}
 	while (iswhitespace(*(++pC)));
-	char* numstr = pC;
+	char* exprstr = pC;
+	bool numstr = true;
 	for (; *pC; pC++)
 		if (*pC < '0' || '9' < *pC)
 		{
-			printf("Invalid step command: %s\n", linebuf);
-			return;
+			numstr = false;
+			break;
 		}
 
-	size_t n = atoi(numstr);
-	for (; n != 0; n--)
+	if (numstr)
+	{
+		size_t n = atoi(exprstr);
+		for (; n != 0; n--)
+			step();
+	}
+
+	// evaluate as an expression
+	expr_t* pexpr = make_expr(exprstr, valid_idn, sizeof(valid_idn)/sizeof(void*));
+	if (!pexpr)
+	{
+		printf("Invalid expression\n");
+		return;
+	}
+
+	idnmap_t map;
+	idnmap_init(&map);
+	for (int i = 0; i < sizeof(valid_idn) / sizeof(void*); i++)
+		idnmap_insert(&map, valid_idn[i], 0);
+
+	int16_t val;
+	while (1)
+	{
 		step();
+		for (int i = 0; i < sizeof(valid_idn) / sizeof(void*); i++)
+		{
+			getreg(i, &val);
+			idnmap_replace(&map, valid_idn[i], val);
+		}
+		if (eval_expr(pexpr, &map))
+			break;
+	}
+	free_expr(pexpr);
 }
 
 static inline void regcommand(char* linebuf)

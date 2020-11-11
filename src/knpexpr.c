@@ -58,7 +58,7 @@ void idnmap_replace(idnmap_t* pmap, char key[], int64_t val)
 {
 	size_t idx, i;
 	for (i = 0; i < pmap->n; i++)
-		if (!strcmp(pmap->pkeys + pmap->n * idnmap_keylen, key))
+		if (!strcmp(pmap->pkeys + i * idnmap_keylen, key))
 		{
 			idx = i;
 			break;
